@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>গ্রাহকের পরিমাপ ক্যালকুলেটর</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    .header {
+      background-color: #fff;
+      padding: 20px 10px;
+      text-align: center;
+      border-bottom: 5px solid #7d181b;
+    }
+
+    .header img {
+      max-width: 150px;
+      height: auto;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #a22125;
+      font-size: 26px;
+    }
+
+    .note {
+      text-align: center;
+      color: #777;
+      margin-bottom: 25px;
+      font-size: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: #444;
+    }
+
+    select,
+    input[type="number"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+
+    select:focus,
+    input[type="number"]:focus {
+      border-color: #a22125;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #a22125;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #7d181b;
+    }
+
+    .results {
+      background-color: #fafafa;
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .results h3 {
+      margin-top: 0;
+      color: #a22125;
+      font-size: 20px;
+      text-align: center;
+    }
+
+    .results p {
+      margin: 8px 0;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 15px;
+        padding: 20px;
+      }
+
+      .header img {
+        max-width: 120px;
+      }
+
+      h2 {
+        font-size: 22px;
+      }
+
+      .results p {
+        font-size: 15px;
+      }
+
+      button {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <img src="image/logo.png" alt="Handam Tailoring Logo">
+  </div>
+
+  <div class="container">
+    <h2>গ্রাহকের পরিমাপ ক্যালকুলেটর</h2>
+    <div class="note">সমস্ত পরিমাপ ইনচে (inches)</div>
+
+    <label for="bodyType">দেহের ধরন</label>
+    <select id="bodyType">
+      <option value="slim">পাতলা</option>
+      <option value="average">মাঝারি</option>
+      <option value="fat">বেশি মোটা</option>
+    </select>
+
+    <label for="height">উচ্চতা (ইঞ্চি)</label>
+    <input type="number" id="height" placeholder=" উদা., 67">
+
+    <label for="shoulderWidth">কাঁধের প্রস্থ (ইঞ্চি)</label>
+    <input type="number" id="shoulderWidth" placeholder=" উদা., 18">
+
+    <label for="armLength">বাজু দৈর্ঘ্য (ইঞ্চি)</label>
+    <input type="number" id="armLength" placeholder=" উদা., 25">
+
+    <label for="sleeveType">আস্তিন ধরন</label>
+    <select id="sleeveType">
+      <option value="plain">সাদা</option>
+      <option value="cuff">কাফ</option>
+    </select>
+
+    <label for="chest">বুক পরিধি (ইঞ্চি)</label>
+    <input type="number" id="chest" placeholder=" উদা., 39">
+
+    <label for="waist">পেটের পরিধি (ইঞ্চি)</label>
+    <input type="number" id="waist" placeholder=" উদা., 37">
+
+    <label for="neck">ঘাড় পরিধি (ইঞ্চি)</label>
+    <input type="number" id="neck" placeholder=" উদা., 16">
+
+    <button onclick="calculate()">পরিমাপ গণনা করুন</button>
+
+    <div class="results" id="results" style="display:none;">
+      <h3>চূড়ান্ত ফলাফল:</h3>
+      <div id="output"></div>
+    </div>
+  </div>
+
+
+  <script>
+    function calculate() {
+      const bodyType = document.getElementById("bodyType").value;
+      const height = parseFloat(document.getElementById("height").value);
+      const shoulder = parseFloat(document.getElementById("shoulderWidth").value);
+      const arm = parseFloat(document.getElementById("armLength").value);
+      const sleeveType = document.getElementById("sleeveType").value;
+      const chest = parseFloat(document.getElementById("chest").value);
+      const waist = parseFloat(document.getElementById("waist").value);
+      const neck = parseFloat(document.getElementById("neck").value);
+  
+      if (isNaN(height) || isNaN(shoulder) || isNaN(arm) || isNaN(chest) || isNaN(waist) || isNaN(neck)) {
+        alert("অনুগ্রহ করে সব ঘর সংখ্যায় পূরণ করুন।");
+        return;
+      }
+  
+      let chestAdd = bodyType === "slim" ? 4 : bodyType === "average" ? 5 : 6;
+      let waistAdd = chestAdd;
+      let pocketAdd = chestAdd;
+      let stepAdd = bodyType === "slim" ? 8 : bodyType === "average" ? 9 : 10;
+  
+      const finalHeight = height + 5;
+      const finalShoulder = (shoulder / 2) + 0.5;
+      const finalArm = sleeveType === "plain" ? arm + 4 : arm - 1.5;
+      const finalChest = ((chest + chestAdd) / 4) + 0.5;
+      const finalWaist = ((waist + waistAdd) / 4) + 0.5;
+      const stepSize = (((waist + waistAdd) / 2) + stepAdd) / 2 + 0.5;
+      const finalNeck = neck + 1.5;
+      const jabzour = (height / 4) + 3;
+      const frontPocketWidth = (chest + pocketAdd) / 8;
+      const sidePocketLength = height / 4;
+      const armOpening = ((shoulder / 2) * 2) / 3;
+      const sidePocketOpening = height / 8;
+  
+      const output = `
+        <p><strong>উচ্চতা:</strong> ${finalHeight.toFixed(2)} ইঞ্চি</p>
+        <p><strong>কাঁধের প্রস্থ:</strong> ${finalShoulder.toFixed(2)} ইঞ্চি</p>
+        <p><strong>হাতের দৈর্ঘ্য:</strong> ${finalArm.toFixed(2)} ইঞ্চি</p>
+        <p><strong>বুক পরিধি:</strong> ${finalChest.toFixed(2)} ইঞ্চি</p>
+        <p><strong>পেট পরিধি:</strong> ${finalWaist.toFixed(2)} ইঞ্চি</p>
+        <p><strong>পদক্ষেপ পরিমাপ:</strong> ${stepSize.toFixed(2)} ইঞ্চি</p>
+        <p><strong>ঘাড় পরিধি:</strong> ${finalNeck.toFixed(2)} ইঞ্চি</p>
+        <p><strong>জাবজোর পরিমাপ:</strong> ${jabzour.toFixed(2)} ইঞ্চি</p>
+        <p><strong>বুক পকেট প্রস্থ:</strong> ${frontPocketWidth.toFixed(2)} ইঞ্চি</p>
+        <p><strong>সাইড পকেট দৈর্ঘ্য:</strong> ${sidePocketLength.toFixed(2)} ইঞ্চি</p>
+        <p><strong>হাতের ফাঁক:</strong> ${armOpening.toFixed(2)} ইঞ্চি</p>
+        <p><strong>সাইড পকেট ফাঁক:</strong> ${sidePocketOpening.toFixed(2)} ইঞ্চি</p>
+      `;
+  
+      document.getElementById("output").innerHTML = output;
+      document.getElementById("results").style.display = "block";
+    }
+  </script>
+  <div class="language-switcher">
+    <select onchange="changeLanguage(this.value)">
+      <option value="ar.html">🇸🇦 العربية</option>
+      <option value="en.html">🇺🇸 English</option>
+      <option value="ind.html">🇮🇳 हिंदी</option>
+      <option value="ba.html">🇧🇩 বাংলা</option>
+    </select>
+  </div>
+  <style>
+    .language-switcher {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999;
+  }
+
+  .language-switcher select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 2px solid #444;
+    background: #fff;
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+  }
+
+  .language-switcher select:hover {
+    background-color: #f0f0f0;
+    border-color: #222;
+  }
+
+  </style>  
+<script>
+  function changeLanguage(page) {
+    // إعادة تحميل الصفحة حتى لو كانت نفسها
+    if (window.location.pathname.endsWith(page)) {
+      // نفس الصفحة؟ أعد تحميلها بالقوة
+      window.location.reload();
+    } else {
+      // صفحة مختلفة؟ انتقل إليها
+      window.location.assign(page);
+    }
+  }
+</script>
+<!-- زر المصمم أسفل الموقع -->
+<div class="designer-footer">
+  <a href="https://wa.me/967774502826" target="_blank" title="تواصل عبر واتساب">
+    🛠️ Designed by <strong>YWD</strong>
+  </a>
+</div>
+
+<style>
+  .designer-footer {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #a22125;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    font-size: 14px;
+    z-index: 999;
+    transition: background-color 0.3s ease;
+  }
+
+  .designer-footer a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .designer-footer:hover {
+    background-color: #7d181b;
+  }
+
+  @media (max-width: 480px) {
+    .designer-footer {
+      font-size: 12px;
+      padding: 8px 16px;
+    }
+  }
+</style>
+
+</body>
+</html>
+    
